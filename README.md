@@ -55,7 +55,10 @@ Also the Methods have to be implemented:
 
 
 ## Description
+[UML Class Diagram](./SoftwareArchi.pdf) of the webapplication.
+
 Website for visualization of medical image data.
+
 Used framework is Three.js.
 
 
