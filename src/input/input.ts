@@ -1,6 +1,12 @@
-import { IInput } from "./i-input";
+import { IInput } from './i-input';
 import ConnectService from '../utils/connect-service';
-import { CallbackToModule, BaseObject, SceneObject, ImageDataObject, ConOutPRemoveCallback } from "../utils/own-types";
+import {
+    CallbackToModule,
+    BaseObject,
+    SceneObject,
+    ImageDataObject,
+    ConOutPRemoveCallback,
+} from '../utils/own-types';
 
 export abstract class Input implements IInput {
     protected data: ImageDataObject | SceneObject | BaseObject | undefined;
@@ -13,10 +19,14 @@ export abstract class Input implements IInput {
     private handleClickRemover: EventListener | undefined = () => {
         this.removeConOutP();
         this.html?.classList.remove('connected');
-    }
+    };
     private conOutputCallback: ConOutPRemoveCallback | undefined;
 
-    constructor(callback: CallbackToModule, htmlModule: HTMLElement, emittedConnectorSignal: string) {
+    constructor(
+        callback: CallbackToModule,
+        htmlModule: HTMLElement,
+        emittedConnectorSignal: string
+    ) {
         this.updateCallbackToModule = callback;
 
         this.emittedConnectorSignal = emittedConnectorSignal;
@@ -26,7 +36,9 @@ export abstract class Input implements IInput {
         this.onConnecting();
         htmlModule.appendChild(this.html);
     }
-    public abstract setData(data: ImageDataObject | SceneObject | BaseObject): void;
+    public abstract setData(
+        data: ImageDataObject | SceneObject | BaseObject
+    ): void;
     protected abstract releaseInChild(): void;
     protected abstract removeData(): void;
     protected abstract setCssShape(): void;
@@ -58,7 +70,7 @@ export abstract class Input implements IInput {
         this.update();
 
         // remove connectLine here, as Observable do not know what line is connected to this observer
-        if(this.connectLine) {
+        if (this.connectLine) {
             this.connectLine.remove();
             this.connectLine = undefined;
         }
@@ -78,7 +90,7 @@ export abstract class Input implements IInput {
     }
     public updateEndLine(x: number, y: number): void {
         // if input is connected and this.connectLine is set
-        if(this.connectLine) {
+        if (this.connectLine) {
             const currentX2 = this.connectLine.getAttribute('x2');
             const currentY2 = this.connectLine.getAttribute('y2');
             if (currentX2 && currentY2) {
@@ -91,27 +103,32 @@ export abstract class Input implements IInput {
     }
 
     private emitConnectSignal(): void {
-        if(this.emittedConnectorSignal) {
-            this.connectService.emit(this.emittedConnectorSignal, this)
+        if (this.emittedConnectorSignal) {
+            this.connectService.emit(this.emittedConnectorSignal, this);
         }
     }
 
     private onConnecting(): void {
-        this.html?.addEventListener('mouseover', event => {
+        this.html?.addEventListener('mouseover', (event) => {
             // stopPropagation from Module.ts -> moving Module on mousemove
             event.stopPropagation();
             if (event.buttons === 1) {
                 // if another input already provides data
                 // handle data instance of ImageDataObject separately because data object has a nested object. So this.data?.data would be true even if no data is set
-                if(!(this.data instanceof ImageDataObject) && this.data?.data) {
+                if (
+                    !(this.data instanceof ImageDataObject) &&
+                    this.data?.data
+                ) {
                     this.removeConOutP();
-                }
-                else if (this.data instanceof ImageDataObject && this.data.data?.data) {
+                } else if (
+                    this.data instanceof ImageDataObject &&
+                    this.data.data?.data
+                ) {
                     this.removeConOutP();
                 }
                 this.emitConnectSignal();
             }
-        })
+        });
     }
 
     private releaseResources(): void {

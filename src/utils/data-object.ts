@@ -1,4 +1,4 @@
-import { VoxelSize } from "./own-types";
+import { VoxelSize } from './own-types';
 
 export class DataObject {
     data: Uint8Array | Uint16Array | null | undefined = null;
@@ -10,6 +10,6 @@ export class DataObject {
     voxelSize: VoxelSize = {
         x: 1,
         y: 1,
-        z: 1
-    }
+        z: 1,
+    };
 }

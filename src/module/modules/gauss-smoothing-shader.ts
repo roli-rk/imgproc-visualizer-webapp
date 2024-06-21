@@ -1,5 +1,5 @@
-import { FilterShader } from "../../filter/filter-shader";
-import { GaussDialog } from "../../dialog/dialogs/gauss-dialog";
+import { FilterShader } from '../../filter/filter-shader';
+import { GaussDialog } from '../../dialog/dialogs/gauss-dialog';
 
 // specify kernel dim, see L. Papula. Mathematische Formelsammlung: Für Ingenieure und Naturwissenschaftler. Springer Vieweg, 12. Auflage, p. 423
 // https://campar.in.tum.de/Chair/HaukeHeibelGaussianDerivatives, visited 25.03.23
@@ -9,7 +9,7 @@ function createGaussianKernel(sigma: number): number[] {
     const kernel: number[] = [];
 
     // with a mean value of 2 * σ, 95% of the values below the Gaussian bell curve are contained in the resulting interval [(2 * σ) , (2 * σ)].
-    const standardDeviation = 2 * sigma
+    const standardDeviation = 2 * sigma;
 
     const mean = Math.floor(standardDeviation / 2);
     let sum = 0.0;
@@ -18,8 +18,7 @@ function createGaussianKernel(sigma: number): number[] {
         for (let j = -standardDeviation; j <= standardDeviation; j++) {
             const x = i - mean;
             const y = j - mean;
-            const value =
-                Math.exp(-(x * x + y * y) / (2 * sigma * sigma))
+            const value = Math.exp(-(x * x + y * y) / (2 * sigma * sigma));
             kernel.push(value);
             // accumulate the kernel values
             sum += value;
@@ -35,12 +34,18 @@ function createGaussianKernel(sigma: number): number[] {
 
 export default class GaussSmoothingShader extends FilterShader {
     constructor() {
-        super('Gauss Smoothing Shader', createGaussianKernel(1), new GaussDialog((gaussSigma: number) => this.onDialogSubmitCallback(gaussSigma), 1));
+        super(
+            'Gauss Smoothing Shader',
+            createGaussianKernel(1),
+            new GaussDialog(
+                (gaussSigma: number) => this.onDialogSubmitCallback(gaussSigma),
+                1
+            )
+        );
     }
-    protected setInnerModule(): void {
-    }
+    protected setInnerModule(): void {}
 
     protected updateKernel(value: number): void {
         this.kernel = createGaussianKernel(value);
-    };
+    }
 }

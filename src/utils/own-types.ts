@@ -16,19 +16,19 @@ export type ModuleInOutPut = {
     [ModuleInOutPutTypes.ImageData]: number;
     [ModuleInOutPutTypes.Scene]: number;
     [ModuleInOutPutTypes.BaseObject]: number;
-}
+};
 
 export type Position = {
     x: number;
     y: number;
-  };
+};
 
 // input/output data types
 // all have the same fields so that use is simplified
 // ? is needed cause the type undefined
 export class ImageDataObject {
-    data?: DataObject | undefined = new DataObject;
-    shader?: ShaderObject | undefined = new ShaderObject;
+    data?: DataObject | undefined = new DataObject();
+    shader?: ShaderObject | undefined = new ShaderObject();
 }
 
 export class SceneObject {
@@ -40,7 +40,7 @@ export class BaseObject {
 }
 
 export type VoxelSize = {
-    x: number,
-    y: number,
-    z: number
-}
+    x: number;
+    y: number;
+    z: number;
+};

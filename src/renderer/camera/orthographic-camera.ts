@@ -11,11 +11,13 @@ export class OrthographicCamera extends Camera {
 
         this.setStartCamera();
         if (this.canvas) {
-            this.cameraController = new OrthographicController(this.canvas, this.camera);
+            this.cameraController = new OrthographicController(
+                this.canvas,
+                this.camera
+            );
         } else {
-            throw Error('canvas not defined!')
+            throw Error('canvas not defined!');
         }
-
     }
 
     public getCamera(): THREE.OrthographicCamera {
@@ -31,17 +33,30 @@ export class OrthographicCamera extends Camera {
         if (this.canvas) {
             if (this.canvas.height < this.canvas.width) {
                 aspect = this.canvas.width / this.canvas.height;
-                this.camera = new THREE.OrthographicCamera(-aspect / 2, aspect / 2, 1 / 2, -1 / 2, 1, 1000);
+                this.camera = new THREE.OrthographicCamera(
+                    -aspect / 2,
+                    aspect / 2,
+                    1 / 2,
+                    -1 / 2,
+                    1,
+                    1000
+                );
             } else {
                 aspect = this.canvas.height / this.canvas.width;
-                this.camera = new THREE.OrthographicCamera(-1 / 2, 1 / 2, aspect / 2, -aspect / 2, 1, 1000);
+                this.camera = new THREE.OrthographicCamera(
+                    -1 / 2,
+                    1 / 2,
+                    aspect / 2,
+                    -aspect / 2,
+                    1,
+                    1000
+                );
             }
             this.camera.position.set(0, 0, 1);
             this.camera.lookAt(new THREE.Vector3(0, 0, 0));
         } else {
-            throw Error('canvas not defined!')
+            throw Error('canvas not defined!');
         }
-
     }
 
     protected updateCamera(): void {
@@ -62,12 +77,10 @@ export class OrthographicCamera extends Camera {
                     this.camera.top = aspect / 2;
                     this.camera.bottom = -aspect / 2;
                 }
-                this.camera.updateProjectionMatrix()
+                this.camera.updateProjectionMatrix();
             } else {
-                throw Error('canvas not defined!')
+                throw Error('canvas not defined!');
             }
-
         }
-
     }
 }

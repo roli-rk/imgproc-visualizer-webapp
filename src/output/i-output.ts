@@ -1,8 +1,8 @@
-import { IInput } from "../input/i-input";
+import { IInput } from '../input/i-input';
 
-export interface IOutput{
+export interface IOutput {
     addConInput(inp: IInput): void;
-    destroy(): void
+    destroy(): void;
     notifyConInputs(): void;
-    updateStartLine(x: number, y: number): void
+    updateStartLine(x: number, y: number): void;
 }
