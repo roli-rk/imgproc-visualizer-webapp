@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { CameraController } from "./camera-controller";
+import { CameraController } from './camera-controller';
 
 export class OrthographicController extends CameraController {
     constructor(canvas: HTMLCanvasElement, camera: THREE.OrthographicCamera) {
@@ -10,8 +10,10 @@ export class OrthographicController extends CameraController {
         if (this.camera) {
             // change position depending on zoom factor with fixed correction value
             const correction: number = 1.9;
-            this.camera.position.x -= deltaX / (1000 * this.camera.zoom / correction);
-            this.camera.position.y += deltaY / (1000 * this.camera.zoom / correction);
+            this.camera.position.x -=
+                deltaX / ((1000 * this.camera.zoom) / correction);
+            this.camera.position.y +=
+                deltaY / ((1000 * this.camera.zoom) / correction);
         }
     }
     protected onWheel(delta: number): void {
@@ -26,6 +28,5 @@ export class OrthographicController extends CameraController {
         }
     }
 
-    protected releaseInChild(): void {
-    }
+    protected releaseInChild(): void {}
 }

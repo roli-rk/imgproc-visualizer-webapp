@@ -12,7 +12,7 @@ export function CsvDowload(csvData: string, fileName: string): void {
     // Set the link element's download attribute and text content
     a.setAttribute('download', `${fileName}.csv`);
     // download file
-    a.click()
+    a.click();
     // releases object URL
     URL.revokeObjectURL(url);
 }

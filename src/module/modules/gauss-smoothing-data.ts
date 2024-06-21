@@ -1,5 +1,5 @@
-import { GaussDialog } from "../../dialog/dialogs/gauss-dialog";
-import { FilterDataModify } from "../../filter/filter-data-modify";
+import { GaussDialog } from '../../dialog/dialogs/gauss-dialog';
+import { FilterDataModify } from '../../filter/filter-data-modify';
 
 // specify kernel dim, see L. Papula. Mathematische Formelsammlung: Für Ingenieure und Naturwissenschaftler. Springer Vieweg, 12. Auflage, p. 423
 // https://campar.in.tum.de/Chair/HaukeHeibelGaussianDerivatives, visited 25.03.23
@@ -9,7 +9,7 @@ function createGaussianKernel(sigma: number): number[] {
     const kernel: number[] = [];
 
     // with a mean value of 2 * σ, 95% of the values below the Gaussian bell curve are contained in the resulting interval [(2 * σ) , (2 * σ)].
-    const standardDeviation = 2 * sigma
+    const standardDeviation = 2 * sigma;
 
     const mean = Math.floor(standardDeviation / 2);
     let sum = 0.0;
@@ -34,11 +34,17 @@ function createGaussianKernel(sigma: number): number[] {
 
 export default class GaussSmoothingData extends FilterDataModify {
     constructor() {
-        super('Gauss Smoothing Data', createGaussianKernel(1.0), new GaussDialog((gaussSigma: number) => this.onDialogSubmitCallback(gaussSigma), 1))
+        super(
+            'Gauss Smoothing Data',
+            createGaussianKernel(1.0),
+            new GaussDialog(
+                (gaussSigma: number) => this.onDialogSubmitCallback(gaussSigma),
+                1
+            )
+        );
     }
 
-    protected setInnerModule(): void {
-    }
+    protected setInnerModule(): void {}
 
     protected updateKernel(value: number): void {
         this.kernel = createGaussianKernel(value);

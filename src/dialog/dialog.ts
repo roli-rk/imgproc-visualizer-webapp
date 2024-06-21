@@ -1,19 +1,22 @@
-import { DialogDefaultSubmitCallback } from "../utils/own-types";
-import { IDialog } from "./i-dialog";
+import { DialogDefaultSubmitCallback } from '../utils/own-types';
+import { IDialog } from './i-dialog';
 
 export abstract class Dialog implements IDialog {
     protected dialog: HTMLElement | undefined = document.createElement('div');
     protected submitCallback: DialogDefaultSubmitCallback | undefined;
 
-    protected checkbox: HTMLInputElement | undefined = document.createElement('input');
+    protected checkbox: HTMLInputElement | undefined =
+        document.createElement('input');
 
     private backdrop: HTMLElement | undefined = document.createElement('div');
-    private cancelButton: HTMLButtonElement | undefined = document.createElement('button');
-    private updateButton: HTMLButtonElement | undefined = document.createElement('button');
+    private cancelButton: HTMLButtonElement | undefined =
+        document.createElement('button');
+    private updateButton: HTMLButtonElement | undefined =
+        document.createElement('button');
 
     constructor(submitCallback: DialogDefaultSubmitCallback) {
         this.dialog?.classList.add('dialog');
-        this.backdrop?.classList.add('dialog-backdrop')
+        this.backdrop?.classList.add('dialog-backdrop');
         this.submitCallback = submitCallback;
         this.createDialog();
 
@@ -30,7 +33,7 @@ export abstract class Dialog implements IDialog {
     public openDialog(): void {
         if (this.dialog && this.backdrop) {
             document.getElementById('workspace')?.appendChild(this.dialog);
-            document.getElementById('workspace')?.appendChild(this.backdrop)
+            document.getElementById('workspace')?.appendChild(this.backdrop);
         }
     }
 
@@ -40,12 +43,12 @@ export abstract class Dialog implements IDialog {
     }
 
     private onSubmit(): void {
-        this.updateButton?.addEventListener(('click'), (event) => {
+        this.updateButton?.addEventListener('click', (event) => {
             event.preventDefault();
             this.submit();
             this.callback();
             this.closeDialog();
-        })
+        });
     }
 
     private onCancel(): void {
@@ -53,7 +56,7 @@ export abstract class Dialog implements IDialog {
             event.preventDefault();
             this.cancel();
             this.closeDialog();
-        })
+        });
     }
 
     private closeDialog(): void {
@@ -85,14 +88,14 @@ export abstract class Dialog implements IDialog {
             this.checkbox.checked = false;
             autoUpdate.appendChild(this.checkbox);
             const spanText = document.createElement('span');
-            spanText.innerHTML = '<p>Auto update</p>'
+            spanText.innerHTML = '<p>Auto update</p>';
             autoUpdate.appendChild(spanText);
             divUpdate.appendChild(autoUpdate);
         }
 
         if (this.updateButton) {
             this.updateButton.classList.add('update');
-            this.updateButton.innerHTML = '<p>Update</p>'
+            this.updateButton.innerHTML = '<p>Update</p>';
             this.updateButton.value = 'default';
 
             divUpdate.appendChild(this.updateButton);
@@ -105,6 +108,5 @@ export abstract class Dialog implements IDialog {
         delete this.checkbox;
         delete this.cancelButton;
         delete this.updateButton;
-
     }
 }

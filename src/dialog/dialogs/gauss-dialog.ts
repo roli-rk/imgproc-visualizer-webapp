@@ -1,13 +1,13 @@
-import { DialogSubmitCallback } from "../../utils/own-types";
-import { Dialog } from "../dialog";
+import { DialogSubmitCallback } from '../../utils/own-types';
+import { Dialog } from '../dialog';
 
 export class GaussDialog extends Dialog {
     private label: HTMLLabelElement | undefined;
     private select: HTMLInputElement | undefined;
-    private gaussSigma: number | undefined
+    private gaussSigma: number | undefined;
 
     constructor(submitCallback: DialogSubmitCallback, gaussSigma: number) {
-        super(submitCallback)
+        super(submitCallback);
         this.gaussSigma = gaussSigma;
 
         this.onSelect();
@@ -19,7 +19,9 @@ export class GaussDialog extends Dialog {
 
     protected cancel(): void {
         if (this.select && this.dialog) {
-            this.select.value = this.gaussSigma ? this.gaussSigma?.toString() : '0';
+            this.select.value = this.gaussSigma
+                ? this.gaussSigma?.toString()
+                : '0';
         }
     }
 
@@ -42,7 +44,9 @@ export class GaussDialog extends Dialog {
             this.select.min = '0.5';
             this.select.max = '5';
             this.select.step = '0.5';
-            this.select.value = this.gaussSigma ? this.gaussSigma.toString() : '1';
+            this.select.value = this.gaussSigma
+                ? this.gaussSigma.toString()
+                : '1';
             divGaussSigma.appendChild(this.select);
         }
     }

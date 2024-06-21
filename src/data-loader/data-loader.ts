@@ -1,6 +1,6 @@
-import { Module } from "../module/module";
-import { ModuleInOutPutTypes } from "../utils/enum-input-output-module";
-import { ModuleInOutPut } from "../utils/own-types";
+import { Module } from '../module/module';
+import { ModuleInOutPutTypes } from '../utils/enum-input-output-module';
+import { ModuleInOutPut } from '../utils/own-types';
 
 // all Enum keys have to be set
 const inputModuleList: ModuleInOutPut = {
@@ -20,8 +20,8 @@ export abstract class DataLoader extends Module {
     protected index: number | undefined = 0;
     constructor(moduleName: string) {
         /* imageData, sceneData, baseObject have to be set directly in the constructor super()
-        ** defining a variable in the class is not possible, as 'super' must be called before accessing 'this'
-        ** and defining a variable outside the class defines a static variable, so all class objects have the same memory reference */
+         ** defining a variable in the class is not possible, as 'super' must be called before accessing 'this'
+         ** and defining a variable outside the class defines a static variable, so all class objects have the same memory reference */
         super(inputModuleList, outputModuleList, 'dataLoader', moduleName);
 
         this.setImageData();
@@ -33,19 +33,25 @@ export abstract class DataLoader extends Module {
     protected abstract setDataProperties(): void;
 
     protected onDialogSubmitCallback(value: any): void {
-        throw new Error("Method not implemented.");
+        throw new Error('Method not implemented.');
     }
 
     protected onUpdateImageDataInput(): Promise<void> {
-        throw Error('DataLoader has no input. Therefore, the callback function should never be called.')
+        throw Error(
+            'DataLoader has no input. Therefore, the callback function should never be called.'
+        );
     }
 
     protected async onUpdateSceneInput(): Promise<void> {
-        throw Error('DataLoader has no input. Therefore, the callback function should never be called.')
+        throw Error(
+            'DataLoader has no input. Therefore, the callback function should never be called.'
+        );
     }
 
     protected async onUpdateBaseObjectInput(): Promise<void> {
-        throw Error('DataLoader has no input. Therefore, the callback function should never be called.')
+        throw Error(
+            'DataLoader has no input. Therefore, the callback function should never be called.'
+        );
     }
 
     protected async setImageData(): Promise<void> {

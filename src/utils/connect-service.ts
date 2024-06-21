@@ -18,7 +18,7 @@ class ConnectService {
     }
 
     public emit(signal: string, input: IInput): void {
-        this.event.emit(signal, input)
+        this.event.emit(signal, input);
     }
 
     public listenOnce(signal: string, callback: ConnectServiceCallback): void {

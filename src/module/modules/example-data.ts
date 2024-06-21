@@ -1,4 +1,4 @@
-import { DataLoader } from "../../data-loader/data-loader";
+import { DataLoader } from '../../data-loader/data-loader';
 import rawFilePathCardiac from '../../assets/cardiac_0.raw';
 import rawFilePathMrt from '../../assets/mrt.raw';
 import rawFilePathFoot from '../../assets/foot_256x256x256_uint8.raw';
@@ -16,8 +16,8 @@ const exampleData = [
         voxelSize: {
             x: 0.390625,
             y: 0.390625,
-            z: 0.4
-        }
+            z: 0.4,
+        },
     },
     {
         name: 'Head MRT',
@@ -30,8 +30,8 @@ const exampleData = [
         voxelSize: {
             x: 0.5,
             y: 0.5,
-            z: 1
-        }
+            z: 1,
+        },
     },
     {
         name: 'Foot CT',
@@ -44,48 +44,60 @@ const exampleData = [
         voxelSize: {
             x: 1,
             y: 1,
-            z: 1
-        }
-    }
-]
+            z: 1,
+        },
+    },
+];
 
 // set inner HTML of the module with setting the variable this.innerHTML from class Module.ts
 export default class ExampleData extends DataLoader {
     private select: HTMLSelectElement | undefined;
     constructor() {
         super('Example Data Loader');
-        this.index = 0
+        this.index = 0;
     }
 
     protected setInnerModule(): void {
         this.select = document.createElement('select');
         this.select.innerHTML = `
-            ${exampleData.map(element => `
+            ${exampleData
+                .map(
+                    (element) => `
             <option value="${element.name}">${element.name}</option>
-            `).join('')}
+            `
+                )
+                .join('')}
         `;
 
-        this.innerModule?.appendChild(this.select)
+        this.innerModule?.appendChild(this.select);
         this.onSelectionChange();
     }
 
     protected async loadFile(): Promise<Blob | undefined> {
         if (this.index != undefined) {
-            const response = await fetch(exampleData[this.index].path).then(res => res.blob());
+            const response = await fetch(exampleData[this.index].path).then(
+                (res) => res.blob()
+            );
             return response;
         }
     }
 
     protected setDataProperties(): void {
         if (this.imageDataOutputs?.[0].data && this.index != undefined) {
-            this.imageDataOutputs[0].data.dataType = exampleData[this.index].datatype;
-            this.imageDataOutputs[0].data.modality = exampleData[this.index].modality;
+            this.imageDataOutputs[0].data.dataType =
+                exampleData[this.index].datatype;
+            this.imageDataOutputs[0].data.modality =
+                exampleData[this.index].modality;
             this.imageDataOutputs[0].data.width = exampleData[this.index].width;
-            this.imageDataOutputs[0].data.height = exampleData[this.index].height;
+            this.imageDataOutputs[0].data.height =
+                exampleData[this.index].height;
             this.imageDataOutputs[0].data.depth = exampleData[this.index].depth;
-            this.imageDataOutputs[0].data.voxelSize.x = exampleData[this.index].voxelSize.x;
-            this.imageDataOutputs[0].data.voxelSize.y = exampleData[this.index].voxelSize.y;
-            this.imageDataOutputs[0].data.voxelSize.z = exampleData[this.index].voxelSize.z;
+            this.imageDataOutputs[0].data.voxelSize.x =
+                exampleData[this.index].voxelSize.x;
+            this.imageDataOutputs[0].data.voxelSize.y =
+                exampleData[this.index].voxelSize.y;
+            this.imageDataOutputs[0].data.voxelSize.z =
+                exampleData[this.index].voxelSize.z;
         }
     }
 
@@ -95,9 +107,10 @@ export default class ExampleData extends DataLoader {
 
     private onSelectionChange(): void {
         this.select?.addEventListener('change', (event) => {
-            let selectedIndex = (event.target as HTMLSelectElement).selectedIndex;
+            let selectedIndex = (event.target as HTMLSelectElement)
+                .selectedIndex;
             this.index = selectedIndex;
-            this.setImageData()
-        })
+            this.setImageData();
+        });
     }
 }

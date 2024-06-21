@@ -1,6 +1,6 @@
-import { CameraController } from "./camera-controller";
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import * as THREE from "three";
+import { CameraController } from './camera-controller';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import * as THREE from 'three';
 
 export class PerspectiveController extends CameraController {
     private controller: OrbitControls | undefined;
@@ -9,18 +9,16 @@ export class PerspectiveController extends CameraController {
         if (this.camera) {
             this.controller = new OrbitControls(this.camera, this.canvas);
             if (this.controller) {
-
                 // disable zoom from THREE OrbitControls, as there is an own implementation here
                 this.controller.enableZoom = false;
 
                 // remove all references to the mouse actions used by the controls except rotation
                 // PAN with CTRL and left mouse button is also provided by this specification
                 this.controller.mouseButtons = {
-                    LEFT: THREE.MOUSE.ROTATE
-                }
+                    LEFT: THREE.MOUSE.ROTATE,
+                };
             }
         }
-
     }
 
     protected onMouseMove(deltaX: number, deltaY: number): void {
