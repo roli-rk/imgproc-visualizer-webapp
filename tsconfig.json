@@ -3,6 +3,7 @@
         "outDir": "dist",
         // sourceMap -> display code position original ts code: https://www.typescriptlang.org/tsconfig#sourceMap
         "sourceMap": true,
+        "removeComments": false,
         "noImplicitAny": true,
         "target": "es5",
         // es2022 needed cause dynamic import is used
