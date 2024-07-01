@@ -9,6 +9,7 @@ module.exports = {
         hot: true,
         static: './dist',
     },
+    devtool: 'source-map',
     entry: './src/index.ts',
     module: {
         rules: [
