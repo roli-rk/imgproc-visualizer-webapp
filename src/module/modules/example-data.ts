@@ -8,7 +8,7 @@ const exampleData = [
     {
         name: 'Cardiac CT',
         path: rawFilePathCardiac,
-        datatype: 'Uint16',
+        dataType: 'Uint16',
         modality: 'ct',
         width: 512,
         height: 512,
@@ -22,7 +22,7 @@ const exampleData = [
     {
         name: 'Head MRT',
         path: rawFilePathMrt,
-        datatype: 'Uint16',
+        dataType: 'Uint16',
         modality: 'mrt',
         width: 512,
         height: 512,
@@ -36,7 +36,7 @@ const exampleData = [
     {
         name: 'Foot CT',
         path: rawFilePathFoot,
-        datatype: 'Uint8',
+        dataType: 'Uint8',
         modality: 'ct',
         width: 256,
         height: 256,
@@ -84,20 +84,9 @@ export default class ExampleData extends DataLoader {
 
     protected setDataProperties(): void {
         if (this.imageDataOutputs?.[0].data && this.index != undefined) {
-            this.imageDataOutputs[0].data.dataType =
-                exampleData[this.index].datatype;
-            this.imageDataOutputs[0].data.modality =
-                exampleData[this.index].modality;
-            this.imageDataOutputs[0].data.width = exampleData[this.index].width;
-            this.imageDataOutputs[0].data.height =
-                exampleData[this.index].height;
-            this.imageDataOutputs[0].data.depth = exampleData[this.index].depth;
-            this.imageDataOutputs[0].data.voxelSize.x =
-                exampleData[this.index].voxelSize.x;
-            this.imageDataOutputs[0].data.voxelSize.y =
-                exampleData[this.index].voxelSize.y;
-            this.imageDataOutputs[0].data.voxelSize.z =
-                exampleData[this.index].voxelSize.z;
+            Object.assign(this.imageDataOutputs[0].data, {
+                ...exampleData[this.index],
+            });
         }
     }
 
