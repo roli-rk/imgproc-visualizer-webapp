@@ -1,5 +1,5 @@
 import { IDialog } from '../dialog/i-dialog';
-import { CsvDowload } from '../utils/dowloadCsv';
+import { CsvDownload } from '../utils/dowloadCsv';
 import { Filter } from './filter';
 
 export abstract class FilterDataModify extends Filter {
@@ -91,7 +91,7 @@ export abstract class FilterDataModify extends Filter {
                     this.logRows =
                         this.logRows +
                         `\n${dataSize}, ${dataType}, ${modality}, ${kernelSize}, ${averageExecution}`;
-                    CsvDowload(
+                    CsvDownload(
                         this.logRows,
                         `filter-execution-time-${this.moduleName}`
                     );

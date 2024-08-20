@@ -103,3 +103,5 @@ export default class ExampleData extends DataLoader {
         });
     }
 }
+
+// customElements.define('data-loader', ExampleData);

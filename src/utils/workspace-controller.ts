@@ -46,7 +46,7 @@ export function WorkspaceController(): void {
             }
         });
 
-        // rest on contextmenu as there is a bug by opening or closing devtools
+        // reset on contextmenu as there is a bug by opening or closing devtools
         workspace.addEventListener('contextmenu', () => {
             view.scaleReset();
             view.update();

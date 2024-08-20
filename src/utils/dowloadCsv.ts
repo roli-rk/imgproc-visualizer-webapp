@@ -1,6 +1,6 @@
 // basic idea see https://www.geeksforgeeks.org/how-to-create-and-download-csv-file-in-javascript/, visited 18.4.23
 
-export function CsvDowload(csvData: string, fileName: string): void {
+export function CsvDownload(csvData: string, fileName: string): void {
     // csv file with csvData
     const blob = new Blob([csvData], { type: 'text/csv' });
 

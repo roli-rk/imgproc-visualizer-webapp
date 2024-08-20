@@ -1,0 +1,12 @@
+<div
+    class="module {{moduleType}}"
+    style="top: 124px; left: 158px"
+    (mousedown)="startMoveModule()"
+>
+    <section class="output"><span class="input image-data"></span></section>
+    <section class="innerModule">
+        <p>{{moduleName}}</p>
+    </section>
+    <section class="input"><span class="input image-data"></span></section>
+    <button class="remove" (click)="destroy()">x</button>
+</div>

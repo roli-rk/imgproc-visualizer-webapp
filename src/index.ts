@@ -1,7 +1,7 @@
 import './index.scss';
 import './index.html';
 import WebGL from 'three/examples/jsm/capabilities/WebGL';
-import { WorkspaceController } from './utils/workspace-contoller';
+import { WorkspaceController } from './utils/workspace-controller';
 
 // set error message on website, if WebGL is not supported
 if (WebGL.isWebGL2Available() === false) {
@@ -11,9 +11,34 @@ if (WebGL.isWebGL2Available() === false) {
 // see https://dmitripavlutin.com/ecmascript-modules-dynamic-import/, visited 05.02.23
 async function addModule(moduleName: string) {
     // the browser will resolve this import and fail if the file doesn't exist
-    let module = await import(`./module/modules/${moduleName}.ts`);
-    new module.default();
+    // let module = await import(`./module/modules/${moduleName}.ts`);
+    // new module.default();
+    const newModule: HTMLElement = document.createElement(moduleName);
+
+    // needed to enable module movement
+    newModule.style.position = 'absolute';
+    document.getElementById('modules')?.appendChild(newModule);
 }
+
+// const moduleMap = {
+//     'data-loader': ExampleData,
+// };
+// Object.entries(moduleMap).forEach(([name, moduleClass]) => {
+//     customElements.define(name, moduleClass);
+// });
+
+// document.addEventListener('DOMContentLoaded', () => {
+//     const mainElement = document.querySelector('main');
+//     if (mainElement) {
+//         // Beispielweise ein "data-loader" Element hinzufügen
+//         const component = document.createElement('data-loader');
+//         mainElement.appendChild(component);
+//     }
+//     document.createElement('data-loader');
+//     document
+//         .getElementById('workspace')
+//         ?.appendChild(document.createElement('data-loader'));
+// });
 
 /* import * as fs from 'fs';
  ** -> is not possible as fs is not accessible on client side website
@@ -40,13 +65,34 @@ const modules = getModuleNames(
 );
 
 const modulesDropdown = document.getElementById('modulesDropdown');
-modules.forEach((module: string) => {
+modules.forEach(async (moduleName: string) => {
+    await defineCustomElement(moduleName);
+
+    addAddButton(moduleName);
+});
+
+async function defineCustomElement(moduleName: string) {
+    const module = await import(`./module/modules/${moduleName}.ts`);
+    const moduleClass = module.default; // extract the exported class
+    if (typeof moduleClass !== 'function') {
+        console.log(moduleClass);
+        console.error(`Module '${moduleName}' does not have a default export`);
+    }
+    if (!(moduleClass.prototype instanceof HTMLElement)) {
+        console.error(
+            `Module '${moduleName}' does not export a class that extends HTMLElement`
+        );
+    }
+    customElements.define(moduleName, moduleClass);
+}
+
+function addAddButton(moduleName: string) {
     const button = document.createElement('button');
     button.addEventListener('click', () => {
-        addModule(module);
+        addModule(moduleName);
     });
     // set first char to upper case as all imported modules are in lowercase
-    button.innerText = module
+    button.innerText = moduleName
         .split('-')
         .map(
             (moduleName) =>
@@ -55,7 +101,7 @@ modules.forEach((module: string) => {
         .join(' ');
     button.classList.add('moduleButton');
     modulesDropdown?.appendChild(button);
-});
+}
 
 // toggle display of module list
 const button = document.getElementById('dropdbutton');

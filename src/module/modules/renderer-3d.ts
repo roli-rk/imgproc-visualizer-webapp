@@ -10,7 +10,7 @@ import { VoxelSize } from '../../utils/own-types';
 import { DataObject } from '../../utils/data-object';
 
 export default class Renderer3d extends Renderer {
-    protected material: THREE.ShaderMaterial | undefined;
+    protected declare material: THREE.ShaderMaterial | undefined;
 
     private voxelSizeZ: number | undefined;
 
@@ -18,7 +18,7 @@ export default class Renderer3d extends Renderer {
         super('Renderer 3D');
     }
 
-    protected animate(): void {
+    protected animate1(): void {
         if (this.mesh) {
             this.mesh.rotation.y += 0.01;
         }
