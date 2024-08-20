@@ -8,14 +8,14 @@ import { Renderer } from '../../renderer/renderer';
 import { Controller2D } from '../../renderer/render-controller/controller-2d';
 
 export default class Renderer2d extends Renderer {
-    protected material: THREE.ShaderMaterial | undefined;
+    protected declare material: THREE.ShaderMaterial | undefined;
     private sliceStep: number | undefined;
 
     constructor() {
         super('Renderer 2D');
     }
 
-    protected animate(): void {
+    protected animate1(): void {
         if (this.material && this.imageDataInputs?.[0].data) {
             let imageDepth = this.imageDataInputs[0].data?.depth;
             let currentSlice = this.material.uniforms.slice.value;

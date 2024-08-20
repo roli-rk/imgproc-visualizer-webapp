@@ -18,6 +18,14 @@ declare module '*.svg' {
     const path: string;
     export default path;
 }
+declare module '*.scss' {
+    const content: string;
+    export default content;
+}
+declare module '*.css' {
+    const content: { [className: string]: string };
+    export default content;
+}
 declare module '*.glsl' {
     const value: string;
     export default value;

@@ -26,6 +26,16 @@ module.exports = {
             {
                 test: /\.scss$/,
                 use: ['style-loader', 'css-loader', 'sass-loader'],
+                exclude: [/node_modules/, /\module\.scss$/],
+            },
+            {
+                test: /\module\.scss$/, // SCSS files that are intended for the Shadow DOM
+                use: ['raw-loader', 'sass-loader'],
+                exclude: /node_modules/,
+            },
+            {
+                test: /\.css$/,
+                use: ['raw-loader'],
                 exclude: /node_modules/,
             },
             // load files

@@ -8,7 +8,7 @@ import { PerspectiveCamera } from './camera/perspective-camera';
 
 import fragmentShader2dConv from '../renderer/shader/fragment-shader-conv.glsl';
 import vertexShader2dConv from '../renderer/shader/vertex-shader-conv.glsl';
-import { CsvDowload } from '../utils/dowloadCsv';
+import { CsvDownload } from '../utils/dowloadCsv';
 
 // all Enum keys have to be set
 const inputModuleList: ModuleInOutPut = {
@@ -131,7 +131,7 @@ export abstract class Renderer extends Module {
         });
     }
 
-    protected abstract animate(): void;
+    protected abstract animate1(): void;
     protected abstract createCamera(): void;
     protected abstract createController(): void;
     protected abstract createMaterial(): void;
@@ -493,7 +493,7 @@ export abstract class Renderer extends Module {
 
                 // animate scene until csv has not been delivered yet
                 if (!this.cvsProvided) {
-                    this.animate();
+                    this.animate1();
                 }
                 // save fps in csv after defined time is reached and csv has not been delivered yet
                 if (
@@ -516,7 +516,7 @@ export abstract class Renderer extends Module {
                         this.csvLog =
                             this.csvLog +
                             `\n${dataSize}, ${dataType}, ${modality}, ${this.material?.uniforms.windowCenter.value}, ${this.material?.uniforms.windowWidth.value}, ${averageFps}`;
-                        CsvDowload(
+                        CsvDownload(
                             this.csvLog,
                             `average-fps-${this.moduleName}`
                         );

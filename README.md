@@ -55,6 +55,28 @@ Also the Methods have to be implemented:
 -   setInnerModule()
     -   -> customize html of the module. Use variable innerModule or if necessary html
 
+### HTML
+
+**Execute method**
+
+[File in project](src/utils/html-event-handler.ts)
+
+-   `(click)="method()`
+-   `(dblclick)="method(variable)`
+-   `(submit)="method(event)`
+-   `(change)="method('name')`
+
+_No type check based on the method signature at runtime, as javascript has already been generated. Add type check in function._
+
+**Use variable**
+
+[File in project](src/utils/template-renderer.ts)
+
+-   `<p>{{moduleName}}</p>`
+-   `@for(let item of items){<option>{{item}}<option>}`
+-   `@if(expression){<p></p>}`
+-   `<html-element [attributeName]=expression>`
+
 ## Description
 
 [UML Class Diagram](./SoftwareArchi.pdf) of the webapplication.

@@ -14,6 +14,13 @@ import {
 } from '../utils/own-types';
 import { IDialog } from '../dialog/i-dialog';
 import openIcon from '../assets/open_dialog.svg';
+import styles from './module.scss';
+import {
+    addEventListeners,
+    removeEventListeners,
+} from '../utils/html-event-handler';
+import { renderTemplate } from '../utils/template-renderer';
+import htmlFile from './module.html';
 
 /*
 To create a new concrete module, the values are provided by inheritance with this class:
@@ -37,11 +44,14 @@ Also the Methods have to be implemented :
     * setInnerModule() -> customize html of the module. Use variable innerModule or if necessary html
 
 Put file in directory "scr/module/modules" and declare the class with "export default class <Klassenname> extends Module{}"
+
+To assign specific styles to a web component, follow the naming convention by naming SCSS files with the extension .module.scss
+Styles with these names are converted to CSS and can be imported as text.
+The import can then be used for the shadow dome of the module
 */
-
-export abstract class Module {
-    protected moduleName: string | undefined;
-
+export abstract class Module extends HTMLElement {
+    protected moduleName?: string;
+    protected moduleType?: string;
     // output data
     // separate output object is required, since the input reference from other module would be overwritten if the data were changed in this module
     // only new object if data changed in module
@@ -80,7 +90,9 @@ export abstract class Module {
     private dialog: IDialog | undefined;
     private dialogIcon: HTMLImageElement | undefined =
         document.createElement('img');
-
+    private shadow: ShadowRoot;
+    private styleElement = document.createElement('style');
+    private template = document.createElement('template');
     constructor(
         inputs: ModuleInOutPut,
         outputs: ModuleInOutPut,
@@ -88,9 +100,13 @@ export abstract class Module {
         moduleName: string,
         dialog: IDialog | undefined = undefined
     ) {
-        this.html?.classList.add(moduleType);
-
+        super();
+        document.addEventListener('mouseup', () => {
+            this.clicked = false;
+        });
+        // toDo: test if this can be set in child
         this.moduleName = moduleName;
+        this.moduleType = moduleType;
 
         this.dialog = dialog;
 
@@ -108,8 +124,77 @@ export abstract class Module {
             this.innerModule?.appendChild(this.dialogIcon);
             this.onDblClickOpenDialog();
         }
+
+        if (new.target === Module) {
+            throw new TypeError('Cannot construct Module instances directly');
+        }
+
+        // Gemeinsame Initialisierungslogik für alle Module
+        this.shadow = this.attachShadow({ mode: 'open' });
+        // this.shadow.appendChild(this.template.content.cloneNode(true));
+        // template.innerHTML = renderTemplate(htmlFile, this);
+
+        this.styleElement.textContent = styles;
+
+        this.renderHtml();
+        this.shadow.appendChild(this.template.content.cloneNode(true));
     }
 
+    private renderHtml() {
+        this.shadow.innerHTML = renderTemplate(htmlFile, this);
+        this.shadow.appendChild(this.styleElement);
+    }
+    connectedCallback() {
+        if (this.shadowRoot) {
+            addEventListeners(this.shadowRoot, this);
+        }
+        this.renderHtml();
+    }
+    disconnectedCallback() {
+        if (this.shadowRoot) {
+            console.log(this.shadowRoot);
+            removeEventListeners(this.shadowRoot, this);
+        }
+        if (this.shadowRoot) {
+            this.shadowRoot.innerHTML = '';
+        }
+        console.log('disconnect');
+    }
+
+    changeOption(event: Event) {
+        console.log((event.target as HTMLSelectElement).value);
+    }
+
+    handleSubmit(event: Event) {
+        event.preventDefault();
+        console.log('handleSubmit');
+        const form = event.target as HTMLFormElement;
+        const formData = new FormData(form);
+
+        const data = Object.fromEntries(formData.entries()); // Konvertiert FormData in ein einfaches Objekt
+
+        console.log('Form submitted!', data);
+
+        // Weitere Verarbeitung der Formulardaten...
+        alert(`Submitted data: ${JSON.stringify(data)}`);
+    }
+
+    protected getTemplate(): string {
+        return `
+        <div class="container">
+            <h1>{{moduleName}}</h1>
+                <button style="top:400px" (click)="handleClick">Click me</button>
+                <button (dblclick)="anotherAction">Another Action</button>
+                <form (submit)="handleSubmit">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email">
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+        `;
+    }
     // in onUpdate...DataInput update the outputs module
     protected abstract onUpdateImageDataInput(): Promise<void>;
     protected abstract onUpdateSceneInput(): Promise<void>;
@@ -251,7 +336,8 @@ export abstract class Module {
         }
     }
 
-    private destroy(): void {
+    destroy(): void {
+        this.remove();
         this.html?.remove();
         this.releaseResources();
         this.releaseInChild();
@@ -269,13 +355,63 @@ export abstract class Module {
         });
     }
 
+    startMoveModule(): void {
+        this.clicked = true;
+    }
+
+    moveModule(event: MouseEvent): void {
+        if (this.clicked && !event.ctrlKey) {
+            if (
+                this.shadow &&
+                this.html &&
+                this.positionTop != undefined &&
+                this.positionLeft != undefined &&
+                this.root &&
+                this.outputImageDataElements &&
+                this.outputSceneElements &&
+                this.outputBaseObjectElements &&
+                this.inputElements
+            ) {
+                // get CSS Variable see: https://www.w3schools.com/css/css3_variables_javascript.asp, visited 21.02.23
+                // zoomFactor is needed as the zoom changes the speed at which the element changes its position when the mouse moves
+                this.positionTop +=
+                    event.movementY /
+                    Number(
+                        getComputedStyle(this.root).getPropertyValue(
+                            '--zoomFactor'
+                        )
+                    );
+                this.positionLeft +=
+                    event.movementX /
+                    Number(
+                        getComputedStyle(this.root).getPropertyValue(
+                            '--zoomFactor'
+                        )
+                    );
+                console.log(this.style.top);
+                // this.style.top = this.positionTop + 'px';
+                // this.style.left = this.positionLeft + 'px';
+
+                this.outputImageDataElements.forEach((output: IOutput) => {
+                    output.updateStartLine(event.movementX, event.movementY);
+                });
+                this.outputSceneElements.forEach((output: IOutput) => {
+                    output.updateStartLine(event.movementX, event.movementY);
+                });
+                this.outputBaseObjectElements.forEach((output: IOutput) => {
+                    output.updateStartLine(event.movementX, event.movementY);
+                });
+                this.inputElements.forEach((input: IInput) => {
+                    input.updateEndLine(event.movementX, event.movementY);
+                });
+            }
+        }
+    }
+
     private onMoveModule(): void {
-        this.html?.addEventListener('mousedown', () => {
-            this.clicked = true;
-        });
-        document.addEventListener('mouseup', () => {
-            this.clicked = false;
-        });
+        // this.html?.addEventListener('mousedown', () => {
+        //     this.clicked = true;
+        // });
         document
             .getElementById('workspace')
             ?.addEventListener('mousemove', (event) => {
@@ -308,6 +444,8 @@ export abstract class Module {
                             );
                         this.html.style.top = this.positionTop + 'px';
                         this.html.style.left = this.positionLeft + 'px';
+                        this.style.top = this.positionTop + 'px';
+                        this.style.left = this.positionLeft + 'px';
 
                         this.outputImageDataElements.forEach(
                             (output: IOutput) => {
