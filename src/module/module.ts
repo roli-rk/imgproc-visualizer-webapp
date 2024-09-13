@@ -15,10 +15,7 @@ import {
 import { IDialog } from '../dialog/i-dialog';
 import openIcon from '../assets/open_dialog.svg';
 import styles from './module.scss';
-import {
-    addEventListeners,
-    removeEventListeners,
-} from '../utils/html-event-handler';
+import { addEventListeners } from '../utils/html-event-handler';
 import { renderTemplate } from '../utils/template-renderer';
 import htmlFile from './module.html';
 
@@ -143,9 +140,8 @@ export abstract class Module extends HTMLElement {
     private renderHtml() {
         this.shadow.innerHTML = renderTemplate(htmlFile, this);
         this.shadow.appendChild(this.styleElement);
-    }
-    connectedCallback() {
         if (this.shadowRoot) {
+            this.abortController?.abort;
             addEventListeners(this.shadowRoot, this);
         }
         this.renderHtml();
