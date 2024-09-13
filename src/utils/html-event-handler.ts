@@ -11,6 +11,7 @@ const EVENTS = [
 export function addEventListeners(
     rootElement: ShadowRoot | HTMLElement,
     context: HTMLElement,
+    signal?: AbortSignal,
     events: string[] = EVENTS
 ): void {
     rootElement.querySelectorAll('*').forEach((element) => {
@@ -22,7 +23,7 @@ export function addEventListeners(
                     element
                 );
                 const eventHandler = createEventHandler(context);
-                element.addEventListener(eventType, eventHandler);
+                element.addEventListener(eventType, eventHandler, { signal });
             }
         });
     });
