@@ -40,7 +40,7 @@ Also the Methods have to be implemented :
     * releaseInChild() -> delete classes variables
     * setInnerModule() -> customize html of the module. Use variable innerModule or if necessary html
 
-Put file in directory "scr/module/modules" and declare the class with "export default class <Klassenname> extends Module{}"
+Put file in directory "scr/module/modules" and declare the class with "export default class <ClassName> extends Module{}"
 
 To assign specific styles to a web component, follow the naming convention by naming SCSS files with the extension .module.scss
 Styles with these names are converted to CSS and can be imported as text.
@@ -62,6 +62,7 @@ export abstract class Module extends HTMLElement {
 
     protected html: HTMLElement | undefined = document.createElement('div');
     protected innerModule: HTMLElement | undefined;
+    protected abortController?: AbortController = new AbortController();
 
     // array for each input type not required, because each input has its own callback function
     private inputElements: Array<IInput> | undefined = [];
@@ -90,6 +91,7 @@ export abstract class Module extends HTMLElement {
     private shadow: ShadowRoot;
     private styleElement = document.createElement('style');
     private template = document.createElement('template');
+    private moveModuleAbortController?: AbortController = new AbortController();
     constructor(
         inputs: ModuleInOutPut,
         outputs: ModuleInOutPut,
@@ -98,9 +100,7 @@ export abstract class Module extends HTMLElement {
         dialog: IDialog | undefined = undefined
     ) {
         super();
-        document.addEventListener('mouseup', () => {
-            this.clicked = false;
-        });
+
         // toDo: test if this can be set in child
         this.moduleName = moduleName;
         this.moduleType = moduleType;
@@ -142,18 +142,29 @@ export abstract class Module extends HTMLElement {
         this.shadow.appendChild(this.styleElement);
         if (this.shadowRoot) {
             this.abortController?.abort;
-            addEventListeners(this.shadowRoot, this);
+            addEventListeners(
+                this.shadowRoot,
+                this,
+                this.abortController?.signal
+            );
         }
+    }
+    connectedCallback() {
         this.renderHtml();
+
+        // stop moving the module when the mouse is up
+        document.addEventListener('mouseup', () => (this.clicked = false), {
+            signal: this.abortController?.signal,
+        });
     }
     disconnectedCallback() {
         if (this.shadowRoot) {
-            console.log(this.shadowRoot);
-            removeEventListeners(this.shadowRoot, this);
-        }
-        if (this.shadowRoot) {
             this.shadowRoot.innerHTML = '';
         }
+        this.abortController?.abort();
+        this.moveModuleAbortController?.abort();
+        delete this.abortController;
+        delete this.moveModuleAbortController;
         console.log('disconnect');
     }
 
@@ -408,9 +419,10 @@ export abstract class Module extends HTMLElement {
         // this.html?.addEventListener('mousedown', () => {
         //     this.clicked = true;
         // });
-        document
-            .getElementById('workspace')
-            ?.addEventListener('mousemove', (event) => {
+
+        document.getElementById('workspace')?.addEventListener(
+            'mousemove',
+            (event) => {
                 if (this.clicked && !event.ctrlKey) {
                     if (
                         this.html &&
@@ -473,7 +485,9 @@ export abstract class Module extends HTMLElement {
                         });
                     }
                 }
-            });
+            },
+            { signal: this.moveModuleAbortController?.signal }
+        );
     }
 
     private async onUpdateInputImageDataCallback(): Promise<void> {
