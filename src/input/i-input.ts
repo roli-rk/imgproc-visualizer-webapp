@@ -14,4 +14,6 @@ export interface IInput {
     setCallbackToConOutP(callback: ConOutPRemoveCallback): void;
     update(): void;
     updateEndLine(x: number, y: number): void;
+
+    getDataString(): string;
 }

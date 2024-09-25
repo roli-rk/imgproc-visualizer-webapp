@@ -40,3 +40,5 @@ export class ImageDataInput extends Input {
         this.html?.classList.add(CssShape.imageData);
     }
 }
+
+customElements.define('image-data-input', ImageDataInput);
