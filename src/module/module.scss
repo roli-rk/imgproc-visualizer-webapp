@@ -218,6 +218,7 @@ svg {
         margin: 10px 0;
     }
 
+    image-data-input,
     .image-data {
         width: 0;
         height: 0;
@@ -262,6 +263,7 @@ svg {
             cursor: pointer !important;
         }
 
+        image-data-input,
         .image-data {
             cursor: default;
             border-bottom: 15px solid;

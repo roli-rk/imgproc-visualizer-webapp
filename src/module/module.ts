@@ -18,6 +18,8 @@ import styles from './module.scss';
 import { addEventListeners } from '../utils/html-event-handler';
 import { renderTemplate } from '../utils/template-renderer';
 import htmlFile from './module.html';
+import { InputComponent } from './InputComponent';
+import { Input } from '../input/input';
 
 /*
 To create a new concrete module, the values are provided by inheritance with this class:
@@ -92,6 +94,14 @@ export abstract class Module extends HTMLElement {
     private styleElement = document.createElement('style');
     private template = document.createElement('template');
     private moveModuleAbortController?: AbortController = new AbortController();
+    private valueFromClass = [
+        { name: 'Object 1' },
+        { name: 'Object 2' },
+        { name: 'Object 3' },
+    ];
+    private someVariable1 = 'Variable 1';
+    inputs0 = 3;
+    inputs: ModuleInOutPut;
     constructor(
         inputs: ModuleInOutPut,
         outputs: ModuleInOutPut,
@@ -100,7 +110,10 @@ export abstract class Module extends HTMLElement {
         dialog: IDialog | undefined = undefined
     ) {
         super();
-
+        console.log(inputs);
+        this.inputs = { 0: 3, 1: 0, 2: 0 };
+        console.log(this.inputs);
+        this.inputs[0];
         // toDo: test if this can be set in child
         this.moduleName = moduleName;
         this.moduleType = moduleType;
@@ -135,6 +148,7 @@ export abstract class Module extends HTMLElement {
 
         this.renderHtml();
         this.shadow.appendChild(this.template.content.cloneNode(true));
+        this.bindObjectToInputAndSubscribeToChanges();
     }
 
     private renderHtml() {
@@ -156,6 +170,80 @@ export abstract class Module extends HTMLElement {
         document.addEventListener('mouseup', () => (this.clicked = false), {
             signal: this.abortController?.signal,
         });
+
+        const inputComponents = this.shadow.querySelectorAll('input-component');
+        console.log(inputComponents);
+        inputComponents.forEach((component, index) => {
+            // Setze das entsprechende Objekt programmatisch (ähnlich wie `[object]`)
+            const inputComp = component as InputComponent;
+            const { objectName, indexObject } = this.parseObjectReference(
+                inputComp.object
+            );
+            console.log(objectName);
+            const test = inputComp.object as Number;
+            console.log(index);
+            // const targetArray = this[objectName as keyof this] as any[];
+            // if (targetArray && Array.isArray(targetArray)) {
+            //     const targetObject = targetArray[index2];
+            //     console.log('Zugriff auf Objekt:', targetObject);
+            // }
+            // console.log(this[inputComp.object as keyof this]);
+            // // inputComp.object = this.valueFromClass[index];
+
+            // // Hören auf Änderungen des Objekts
+            // inputComp.addEventListener('objectChange', (event: Event) => {
+            //     const customEvent = event as CustomEvent; // Cast to CustomEvent
+            //     console.log(index2, customEvent.detail);
+            //     this.valueFromClass[index2] = customEvent.detail;
+            //     console.log('Updated valueFromClass:', this.valueFromClass);
+            // });
+        });
+    }
+
+    private bindObjectToInputAndSubscribeToChanges() {
+        const imageDataInputs =
+            this.shadow.querySelectorAll('image-data-input');
+
+        imageDataInputs.forEach((component, index) => {
+            const inputComp = component as Input;
+            console.log(inputComp);
+            const { objectName, indexObject } = this.parseObjectReference(
+                inputComp.getDataString()
+            );
+            console.log(objectName);
+            const targetArray = this[objectName as keyof this] as any[];
+            if (targetArray && Array.isArray(targetArray)) {
+                const targetObject = targetArray[indexObject];
+                console.log('Zugriff auf Objekt:', targetObject);
+            }
+            // console.log(this[inputComp.object as keyof this]);
+            // inputComp.object = this.valueFromClass[index];
+
+            // Hören auf Änderungen des Objekts
+            // inputComp.addEventListener('objectChange', (event: Event) => {
+            //     const customEvent = event as CustomEvent; // Cast to CustomEvent
+            //     console.log(index2, customEvent.detail);
+            //     this.valueFromClass[index2] = customEvent.detail;
+            //     console.log('Updated valueFromClass:', this.valueFromClass);
+            // });
+        });
+        const sceneInputs = this.shadow.querySelectorAll('scene-input');
+        const baseDataInputs = this.shadow.querySelectorAll('base-data-input');
+    }
+
+    private parseObjectReference(ref: string): {
+        objectName: string;
+        indexObject: number;
+    } {
+        // Beispiel-String: "valueFromClass[0]"
+        const match = ref.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\[(\d+)\]$/);
+        if (match) {
+            return {
+                objectName: match[1],
+                indexObject: parseInt(match[2], 10),
+            };
+        }
+        throw new Error(`Ungültige Referenz: ${ref}`);
     }
     disconnectedCallback() {
         if (this.shadowRoot) {

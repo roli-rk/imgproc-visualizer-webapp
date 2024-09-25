@@ -35,3 +35,5 @@ export class BaseObjectInput extends Input {
         this.html?.classList.add(CssShape.baseObject);
     }
 }
+
+customElements.define('base-object', BaseObjectInput);

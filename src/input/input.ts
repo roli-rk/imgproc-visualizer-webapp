@@ -8,7 +8,52 @@ import {
     ConOutPRemoveCallback,
 } from '../utils/own-types';
 
-export abstract class Input implements IInput {
+export abstract class Input extends HTMLElement implements IInput {
+    private _dataInput: any = null;
+    private dataString!: string;
+
+    connectedCallback() {
+        console.log(this._dataInput);
+    }
+
+    // Definiere die "object"-Property
+    // set data(value: any) {
+    //     this._dataInput = value;
+    //     console.log(value);
+    //     // toDo
+    //     // this.render();
+    // }
+
+    // get data() {
+    //     return this.dataString;
+    // }
+
+    getDataString(): string {
+        return this.dataString;
+    }
+
+    // Names of the attributes to be observed
+    static get observedAttributes() {
+        return ['data-input'];
+    }
+    // initiale setting the object name given in the html
+    // and make it possible to set new value with e.g.
+    // document.querySelector('input-...').setAttribute('dataObject', 'newValue');
+    attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+        console.log(name);
+        console.log(newValue);
+        if (oldValue !== newValue) {
+            if (name === 'data-input') {
+                this.dataString = newValue;
+            } else {
+                throw new Error(
+                    `${name} is not defined as observed attribute. Use one from`
+                );
+            }
+            // this.render();
+        }
+    }
+
     protected data: ImageDataObject | SceneObject | BaseObject | undefined;
     protected html: HTMLElement | undefined;
 
@@ -27,6 +72,8 @@ export abstract class Input implements IInput {
         htmlModule: HTMLElement,
         emittedConnectorSignal: string
     ) {
+        super();
+
         this.updateCallbackToModule = callback;
 
         this.emittedConnectorSignal = emittedConnectorSignal;
@@ -34,7 +81,7 @@ export abstract class Input implements IInput {
         this.html.classList.add('input');
         this.setCssShape();
         this.onConnecting();
-        htmlModule.appendChild(this.html);
+        htmlModule?.appendChild(this.html);
     }
     public abstract setData(
         data: ImageDataObject | SceneObject | BaseObject

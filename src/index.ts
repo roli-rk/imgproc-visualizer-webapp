@@ -2,6 +2,7 @@ import './index.scss';
 import './index.html';
 import WebGL from 'three/examples/jsm/capabilities/WebGL';
 import { WorkspaceController } from './utils/workspace-controller';
+import { InputComponent } from './module/InputComponent';
 
 // set error message on website, if WebGL is not supported
 if (WebGL.isWebGL2Available() === false) {
@@ -63,8 +64,9 @@ function getModuleNames(r: any) {
 const modules = getModuleNames(
     require.context('./module/modules', false, /.ts$/)
 );
-
 const modulesDropdown = document.getElementById('modulesDropdown');
+customElements.define('input-component', InputComponent);
+
 modules.forEach(async (moduleName: string) => {
     await defineCustomElement(moduleName);
 

@@ -35,3 +35,5 @@ export class SceneInput extends Input {
         this.html?.classList.add(CssShape.scene);
     }
 }
+
+customElements.define('scene-input', SceneInput);
