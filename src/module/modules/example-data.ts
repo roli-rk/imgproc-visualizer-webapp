@@ -1,38 +1,8 @@
 import { DataLoader } from "../../data-loader/data-loader";
-import rawFilePathCardiac from '../../assets/cardiac_0.raw';
-import rawFilePathMrt from '../../assets/mrt.raw';
 import rawFilePathFoot from '../../assets/foot_256x256x256_uint8.raw';
 
 // Foot-Data: https://github.com/lebarba/WebGLVolumeRendering/blob/5de6351a17d53645919232804dded6de7a060c61/Web/foot.raw, visited 02.01.23
 const exampleData = [
-    {
-        name: 'Cardiac CT',
-        path: rawFilePathCardiac,
-        datatype: 'Uint16',
-        modality: 'ct',
-        width: 512,
-        height: 512,
-        depth: 337,
-        voxelSize: {
-            x: 0.390625,
-            y: 0.390625,
-            z: 0.4
-        }
-    },
-    {
-        name: 'Head MRT',
-        path: rawFilePathMrt,
-        datatype: 'Uint16',
-        modality: 'mrt',
-        width: 512,
-        height: 512,
-        depth: 144,
-        voxelSize: {
-            x: 0.5,
-            y: 0.5,
-            z: 1
-        }
-    },
     {
         name: 'Foot CT',
         path: rawFilePathFoot,
