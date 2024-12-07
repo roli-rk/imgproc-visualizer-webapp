@@ -17,7 +17,7 @@
     "file-loader": "^6.2.0",
     "html-loader": "^4.2.0",
     "html-webpack-plugin": "^5.5.0",
-    "sass-loader": "^13.2.0",
+    "sass-loader": "^16.0.4",
     "style-loader": "^3.3.1",
     "ts-loader": "^9.4.2",
     "ts-shader-loader": "^2.0.2",
