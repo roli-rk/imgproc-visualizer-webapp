@@ -39,22 +39,7 @@ function handleEvent(event: Event, context: HTMLElement) {
     let target = event.target as HTMLElement;
     // Loop through the DOM to find a parent element with the event handler
     while (target && target !== context) {
-        let action: string | null = null;
-        if (event.type === 'click') {
-            action = target.getAttribute('(click)');
-        } else if (event.type === 'dblclick') {
-            action = target.getAttribute('(dblclick)');
-        } else if (event.type === 'mousedown') {
-            action = target.getAttribute('(mousedown)');
-        } else if (event.type === 'mouseup') {
-            action = target.getAttribute('(mouseup)');
-        } else if (event.type === 'mousemove') {
-            action = target.getAttribute('(mousemove)');
-        } else if (event.type === 'submit') {
-            action = target.getAttribute('(submit)');
-        } else if (event.type === 'change') {
-            action = target.getAttribute('(change)');
-        }
+        const action = target.getAttribute(`(${event.type})`);
 
         if (action) {
             const match = action.match(/(\w+)\((.*?)\)/);

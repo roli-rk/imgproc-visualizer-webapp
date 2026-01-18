@@ -44,8 +44,8 @@ export abstract class Renderer extends Module {
     private vsShaderFiltering: string | undefined;
     private htmlFps: HTMLParagraphElement | undefined;
     private isCanvasActive: boolean | undefined;
-    private renderer: THREE.WebGLRenderer | undefined;
-    private scene: THREE.Scene | undefined;
+    protected renderer: THREE.WebGLRenderer | undefined;
+    protected scene: THREE.Scene | undefined;
 
     private bufferMaterial: THREE.ShaderMaterial | undefined;
     private finalMaterial: THREE.ShaderMaterial | undefined;

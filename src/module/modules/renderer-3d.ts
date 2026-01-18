@@ -74,14 +74,16 @@ export default class Renderer3d extends Renderer {
             glslVersion: THREE.GLSL3,
             uniforms: {
                 volumeTexture: { value: this.texture },
-                cameraPos: { value: this.camera?.getCamera().position },
-                stepSize: { value: 200 },
+                cameraPos: { value: this.camera?.getCamera().position.clone },
+                stepSize: { value: 0.1 },
                 windowCenter: { value: centerStart },
                 windowWidth: { value: widthStart },
                 kernel: { value: [0] },
                 kSize: { value: 0 },
 
                 voxelSizeZ: { value: this.voxelSizeZ },
+                u_isoValue: { value: 0.5 }, // unbedingt definieren
+                u_lightDir: { value: new THREE.Vector3(1, 1, 1).normalize() },
             },
             defines: {
                 kernelSize: 1,
