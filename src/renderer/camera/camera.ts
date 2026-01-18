@@ -1,5 +1,6 @@
 import { EventEmitter } from 'events';
 import { CameraController } from './controller/camera-controller';
+import * as THREE from 'three';
 
 export abstract class Camera {
     // specify camera type in child class

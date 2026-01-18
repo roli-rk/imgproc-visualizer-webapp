@@ -1,5 +1,6 @@
 import { ImageDataObject } from "../../utils/own-types";
 import { RenderController } from "./render-controller";
+import * as THREE from 'three';
 
 export class Controller2D extends RenderController {
     private slice: number | undefined

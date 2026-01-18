@@ -1,4 +1,5 @@
 import { ImageDataObject } from "../../utils/own-types";
+import * as THREE from 'three';
 
 export abstract class RenderController {
     protected imageDataObject: ImageDataObject | undefined;

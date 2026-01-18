@@ -1,5 +1,6 @@
 import { ImageDataObject } from "../../utils/own-types";
 import { RenderController } from "./render-controller";
+import * as THREE from 'three';
 
 export class Controller3D extends RenderController {
     constructor(data: ImageDataObject | undefined, material: THREE.ShaderMaterial, canvas: HTMLCanvasElement, htmlInfo: HTMLElement) {
